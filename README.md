@@ -1,8 +1,8 @@
-# COMA 2.0 beta
+# COMA 2.0
 
 **A place of your own for your people.**
 
-COMA is a small, private group chat app for one-to-one conversations. It runs locally with Python 3.12 or newer and stores accounts and messages in SQLite. This beta restores the browser interface and provides a working source download.
+COMA is a small chat app for one-to-one conversations. It runs locally with Python 3.12 or newer and stores accounts and messages in SQLite. Version 2.0 includes the browser interface and a working source download.
 
 ## Start
 
@@ -24,7 +24,7 @@ To chat with someone else, choose **Invite someone** and privately share the sin
 
 ## Desktop builds
 
-On Windows, install PyInstaller 6.22.3 and run `python build.py` to create `dist/COMA.exe`. On a Mac, the same command creates a COMA app and a DMG for that Mac's architecture. Read [BUILDING.md](BUILDING.md) for details. These builds require testing on their destination platforms; the source version is the primary beta distribution.
+On Windows, install PyInstaller 6.22.3 and run `python build.py` to create `dist/COMA.exe`. On a Mac, the same command creates a COMA app and a DMG for that Mac's architecture. Read [BUILDING.md](BUILDING.md) for details. The Windows EXE was built and passed its bundled startup test. The macOS DMG has not yet been tested on a Mac. The source version is available on all supported platforms.
 
 ## Data and privacy
 
@@ -34,7 +34,7 @@ Passwords use salted scrypt hashes. Sessions expire after seven days. The server
 
 **Messages are not end-to-end encrypted and the database is not encrypted on disk.** The server administrator can read stored data. For access across devices, put a single COMA server behind HTTPS and set `PUBLIC_ORIGIN` to its exact origin and `COOKIE_SECURE=1`. The desktop launcher is for local use.
 
-This beta does not support password recovery, self-service account deletion or export, group conversations, calls, attachments, or push notifications. Drafts in the current browser window may be lost when it closes or reloads.
+COMA 2.0 does not support password recovery, self-service account deletion or export, group conversations, calls, attachments, or push notifications. Drafts in the current browser window may be lost when it closes or reloads.
 
 ## Tests
 
