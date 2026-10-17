@@ -1,9 +1,9 @@
-# COMA 0.1.0 beta 1
+# COMA 2.0.0 beta 1
 
-The first public beta of COMA brings personal invitations, two-person conversations, live updates, read status, search, blocking, and abuse reports to a small group chat app.
+This beta makes the source download usable again. The GitHub 1.0 tag contained the Python and Node servers but omitted the `public/` browser assets and tests that those servers expected.
 
-The interface and documentation are in English. The Windows build includes a standalone EXE. The macOS builds provide Apple Silicon and Intel DMGs when the release workflow completes successfully.
+- Restored the responsive browser interface for accounts, personal invitations, private conversations, live messages, read status, search, blocking, and reports.
+- Added an isolated integration smoke test for assets, registration, invitations, messaging, and CSRF.
+- Aligned the package version and documentation with the beta.
 
-This is an early test release. Messages are not end-to-end encrypted; the server administrator can read the database. Password recovery, account deletion in the interface, group conversations, file sharing, and push notifications are not available yet.
-
-Read the [README](README.md) for setup, storage locations, screenshots, and current limitations.
+This is a beta for testing. Desktop builds need validation on Windows and macOS before they are distributed. Messages are not end-to-end encrypted. See the [README](README.md) for setup and current limitations.
