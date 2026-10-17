@@ -1,132 +1,57 @@
-# COMA - Beta
+# COMA 2.0 beta
 
 **A place of your own for your people.**
 
-COMA is a small-group chat app. Create an account, invite someone with a personal link, and keep the conversation going in a calm space. It runs on a Python server and stores data in SQLite.
+COMA is a small, private group chat app for one-to-one conversations. It runs locally with Python 3.12 or newer and stores accounts and messages in SQLite. This beta restores the browser interface and provides a working source download.
 
-**Version 0.1 beta.** The core features work, but this is an early release for a small test group.
-
-![COMA on desktop with the conversations list and an open private chat](docs/screenshots/coma-chat.png)
-
-*Screenshots show the real app with fictional example accounts and messages. A new COMA installation starts empty.*
-
-## What works
-
-- Accounts: register, sign in, change your display name, and sign out.
-- Personal invitations: single-use links valid for seven days that can be revoked.
-- Private conversations between two people with live updates and automatic reconnection.
-- Saved and read status, search, unread filters, and older message history.
-- Contact blocking and abuse reports, which the administrator can review.
-- A responsive interface for desktop and mobile.
-
-## Screenshots
-
-### Welcome screen
-
-![COMA welcome and account registration screen](docs/screenshots/coma-welcome.png)
-
-### Mobile conversation
-
-<img src="docs/screenshots/coma-mobile.png" alt="COMA mobile view with an open conversation and message composer" width="320">
-
-## Run on Windows
-
-If you have the built app, double-click **COMA.exe**. A local build is available at `dist/COMA.exe`. Python is not required on the destination computer. COMA opens your browser and a console window. Keep the console open while using the app; press **Ctrl+C** there to stop it.
-
-The Windows executable was built locally and passed its bundled startup test. The `dist/` directory is excluded from Git. A GitHub download will be available only after the executable is attached to a release.
-
-## Run with Python
-
-Requires **Python 3.12 or newer**. The server uses only the Python standard library.
-
-From the COMA directory:
+## Start
 
 ```sh
 python server.py --open
 ```
 
-On macOS or Linux, use `python3` if necessary. You can also open **http://127.0.0.1:4310** yourself. On Windows, double-click `start-coma.cmd`. Press **Ctrl+C** to stop the server.
+On macOS or Linux, use `python3` if needed. Open http://127.0.0.1:4310 if your browser does not open automatically. Keep the server running while you use COMA. The first registered account becomes the administrator.
 
-### Start your first conversation
+To chat with someone else, choose **Invite someone** and privately share the single-use link. It expires after seven days. The other person must reach the same server; a link with `127.0.0.1` only works on your own computer.
 
-1. Register the first account. It becomes the administrator.
-2. Choose **Invite someone** and copy the personal invitation link.
-3. Open the link in a different browser or private window to test a second account.
-4. Register that account and begin chatting.
+## Features
 
-Registration needs a name, username, and a password of at least 12 characters. Email is not required. After the first account, new users need an invitation.
+- Accounts with a username, display name, and password of at least 12 characters.
+- Personal invitation links and private conversations between two people.
+- Live messages, older message history, read status, and unread counts.
+- Conversation search, contact blocking, and reports for the administrator.
+- Responsive browser interface for desktop and mobile.
 
-By default, COMA listens only on your computer. For conversations across devices, run one shared server behind HTTPS. A link pointing to `127.0.0.1` works only on the computer that created it.
+## Desktop builds
 
-## Build desktop apps
+On Windows, install PyInstaller 6.22.3 and run `python build.py` to create `dist/COMA.exe`. On a Mac, the same command creates a COMA app and a DMG for that Mac's architecture. Read [BUILDING.md](BUILDING.md) for details. These builds require testing on their destination platforms; the source version is the primary beta distribution.
 
-| Platform | Current status |
-| --- | --- |
-| Windows | EXE built locally and startup test passed. |
-| macOS | APP and DMG build scripts are ready; the Mac build has not yet been run or tested. |
+## Data and privacy
 
-To build on Windows, install PyInstaller 6.22.3 and run `python build.py`. A DMG must be built on a Mac. See [BUILDING.md](BUILDING.md) for detailed instructions and storage locations. The macOS build is not notarized or signed with an Apple Developer certificate.
+The default database is `data/coma.sqlite` beside the source code. Desktop builds use `%LOCALAPPDATA%\\COMA\\data` on Windows and `~/Library/Application Support/COMA/data` on macOS. Set `DATA_DIR` to choose another directory. Stop the server before backing up the complete data directory. The database and `.env` are excluded from Git.
 
-## Data storage
+Passwords use salted scrypt hashes. Sessions expire after seven days. The server limits sign-in and message attempts, and checks origin and CSRF tokens on write requests.
 
-Accounts, password hashes, messages, sessions, and invitations are stored in `coma.sqlite`.
+**Messages are not end-to-end encrypted and the database is not encrypted on disk.** The server administrator can read stored data. For access across devices, put a single COMA server behind HTTPS and set `PUBLIC_ORIGIN` to its exact origin and `COOKIE_SECURE=1`. The desktop launcher is for local use.
 
-| How you start COMA | Default data directory |
-| --- | --- |
-| `python server.py` | `data/` next to the source code |
-| Windows desktop app | `%LOCALAPPDATA%\COMA\data` |
-| macOS desktop app | `~/Library/Application Support/COMA/data` |
-
-The desktop app does not automatically import the source version's data. Set `DATA_DIR` to use another location. Stop the server before backing up the complete data directory. `.gitignore` excludes personal databases, `.env` files, and local builds. The EXE does not contain developer accounts or messages.
-
-## Privacy and beta limitations
-
-Passwords are hashed with scrypt and a unique salt. Only conversation participants can access their conversation through the app. Sessions expire after seven days. The server checks the origin and CSRF token on write requests and limits sign-in attempts and message sending.
-
-**Messages are not end-to-end encrypted, and the database is not encrypted on disk.** The server administrator can read stored data. Use HTTPS on a shared server.
-
-This beta does not yet support password recovery, email verification, self-service account deletion or data export, group conversations, calls, file attachments, or push notifications when the app is closed. There is no offline outbox. Drafts and unconfirmed messages exist only in the current browser window and may be lost when it closes or reloads.
-
-## Host a small test group
-
-Use one Python process with a persistent data directory. Create the administrator account yourself before making the server accessible to others. Put a TLS reverse proxy in front of COMA and disable buffering for `/api/events`.
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `HOST` | `127.0.0.1` | Listen address for `server.py`. |
-| `PORT` | `4310` | Server port. |
-| `DATA_DIR` | `data/` beside `server.py` | Persistent SQLite directory. |
-| `PUBLIC_ORIGIN` | Derived from the local Host header | Set to the exact HTTPS origin when hosting. |
-| `COOKIE_SECURE` | Off | Set to `1` for HTTPS. |
-| `MAX_USERS` | `100` | Maximum number of accounts. |
-
-The Python server does not load `.env` automatically; set variables in the shell. The desktop launcher binds to `127.0.0.1`, so use `server.py` for hosting. Live connections and rate limits are process-local. Behind a reverse proxy, visitors share that proxy's IP-based limit.
+This beta does not support password recovery, self-service account deletion or export, group conversations, calls, attachments, or push notifications. Drafts in the current browser window may be lost when it closes or reloads.
 
 ## Tests
 
 ```sh
-python -m unittest discover -s test -p test_python.py -v
+python -m unittest discover -s test -p "test_*.py" -v
 ```
 
-The four Python integration tests use temporary databases. They cover registration, invitations, authorization, CSRF, messages, live updates, read status, blocking, reports, pagination, restart persistence, and rate limits. The original Node implementation has a separate test suite: `npm test` with Node 24.
+The smoke test starts an isolated temporary server and checks static assets, registration, invitation-only access, private messaging, and CSRF protection. The legacy Node server is available with Node 24; run `npm run check` to check its and the browser script's syntax. Do not run both servers against the same database at once.
 
 ## Project layout
 
 ```text
-COMA/
-  server.py            Python server and API
-  desktop.py           Desktop launcher
-  schema.sql           SQLite schema
-  public/              Browser interface and icon
-  docs/screenshots/    Example screenshots
-  test/                Python and legacy Node integration tests
-  build.py             EXE / APP / DMG builder and self-test
-  BUILDING.md          Desktop build instructions
-  README.md
+server.py          Python server and API
+server.mjs         Legacy Node server
+schema.sql         SQLite schema
+public/            Browser interface
+desktop.py         Desktop launcher
+build.py           Desktop builder and bundled startup check
+test/              Integration smoke test
 ```
-
-The original Node server (`server.mjs`) remains available. Python and Node use the same interface, database schema, and password hashes. Run only one server at a time against a database.
-
-## Feedback
-
-Describe what you did, what you expected, and what happened. Mention your operating system and whether you used the EXE or Python version. Do not share passwords, session cookies, invitation links, or personal databases in bug reports.
