@@ -1,9 +1,9 @@
-# COMA 2.0.0 beta 1
+# COMA 2.0
 
-This beta makes the source download usable again. The GitHub 1.0 tag contained the Python and Node servers but omitted the `public/` browser assets and tests that those servers expected.
+COMA 2.0 provides a working source distribution with its browser interface. The previous 1.0 GitHub tag omitted the `public/` files needed by the servers and desktop builder.
 
-- Restored the responsive browser interface for accounts, personal invitations, private conversations, live messages, read status, search, blocking, and reports.
-- Added an isolated integration smoke test for assets, registration, invitations, messaging, and CSRF.
-- Aligned the package version and documentation with the beta.
+- Private one-to-one chats with personal invitations, live updates, history, read status, search, blocking, and reports.
+- A responsive browser interface and an isolated integration smoke test.
+- A Windows EXE that passed a bundled startup test.
 
-This is a beta for testing. Desktop builds need validation on Windows and macOS before they are distributed. Messages are not end-to-end encrypted. See the [README](README.md) for setup and current limitations.
+The macOS DMG has not yet been built and tested on a Mac. Messages are not end-to-end encrypted. See the [README](README.md) for setup, data locations, and limitations.
